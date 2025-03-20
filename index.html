@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Décompte jusqu'au 25 août 2025</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+        }
+        
+        .countdown {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0.5rem;
+        }
+        
+        .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3498db;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            min-width: 80px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .label {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+        
+        .secondary-info {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed #ccc;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        /* Styles pour la barre de progression */
+        .progress-container {
+            margin-top: 2rem;
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 25px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            mix-blend-mode: difference;
+        }
+        
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .number {
+                font-size: 1.8rem;
+                min-width: 60px;
+            }
+            
+            .label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <script>
+        function updateCountdown() {
+            const today = new Date();
+            const targetDate = new Date(2025, 7, 25); // Mois 7 = Août (indexé à 0)
+            
+            const timeDiff = targetDate - today;
+            const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const weeksLeft = Math.floor(daysLeft / 7);
+            
+            const monthsLeft = Math.floor(daysLeft / 30.44); // Approximation d'un mois moyen
+            const extraDays = Math.round(daysLeft % 30.44);
+            
+            // Calculer aussi les heures, minutes et secondes
+            const hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            document.getElementById("days").textContent = daysLeft;
+            document.getElementById("weeks").textContent = weeksLeft;
+            document.getElementById("months").textContent = monthsLeft;
+            document.getElementById("extra-days").textContent = extraDays;
+            document.getElementById("hours").textContent = hoursLeft;
+            document.getElementById("minutes").textContent = minutesLeft;
+            document.getElementById("seconds").textContent = secondsLeft;
+            
+            // Calculer et mettre à jour la barre de progression
+            // Supposons une date de début (ajustez selon votre cas)
+            const startDate = new Date(2023, 0, 1); // 1er janvier 2023
+            const totalTime = targetDate - startDate;
+            const elapsedTime = today - startDate;
+            const percentComplete = (elapsedTime / totalTime) * 100;
+            
+            document.getElementById("progress-bar").style.width = percentComplete.toFixed(2) + "%";
+            document.getElementById("progress-text").textContent = percentComplete.toFixed(2) + "% terminé";
+        }
+        
+        window.onload = function() {
+            updateCountdown();
+            // Mettre à jour chaque seconde pour l'animation
+            setInterval(updateCountdown, 1000);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Décompte jusqu'au 25 août 2025</h1>
+        
+        <div class="countdown">
+            <div class="time-unit">
+                <div class="number" id="months">0</div>
+                <div class="label">Mois</div>
+            </div>
+            <div class="time-unit">
+                <div class="number" id="extra-days">0</div>
+                <div class="label">Jours</div>
+            </div>
+            <div class="time-unit">
+                <div class="number" id="hours">0</div>
+                <div class="label">Heures</div>
+            </div>
+            <div class="time-unit">
+                <div class="number" id="minutes">0</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="time-unit">
+                <div class="number" id="seconds">0</div>
+                <div class="label">Secondes</div>
+            </div>
+        </div>
+        
+        <!-- Ajout de la barre de progression -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-text" id="progress-text">0% terminé</div>
+        </div>
+        
+        <div class="secondary-info">
+            <p>Total: <span id="days">0</span> jours (<span id="weeks">0</span> semaines)</p>
+        </div>
+    </div>
+</body>
+</html>

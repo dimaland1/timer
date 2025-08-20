@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Décompte jusqu'au 21 août 2025</title>
+    <title>Décompte jusqu'au 21 août 2025 à 17:00</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -138,20 +138,36 @@
     <script>
         function updateCountdown() {
             const today = new Date();
-            const targetDate = new Date(2025, 7, 21); // Mois 7 = Août (indexé à 0)
-            
+            // Cible : 21 août 2025 à 17:00
+            const targetDate = new Date(2025, 7, 21, 17, 0, 0); // mois indexé à 0
+
             const timeDiff = targetDate - today;
+
+            // Si la date cible est passée, afficher "Terminé" et fixer les compteurs à 0
+            if (timeDiff <= 0) {
+                document.getElementById("days").textContent = 0;
+                document.getElementById("weeks").textContent = 0;
+                document.getElementById("months").textContent = 0;
+                document.getElementById("extra-days").textContent = 0;
+                document.getElementById("hours").textContent = 0;
+                document.getElementById("minutes").textContent = 0;
+                document.getElementById("seconds").textContent = 0;
+                document.getElementById("progress-bar").style.width = "100%";
+                document.getElementById("progress-text").textContent = "Terminé";
+                return;
+            }
+
             const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             const weeksLeft = Math.ceil(daysLeft / 7);
-            
+
             const monthsLeft = Math.floor(daysLeft / 30.44); // Approximation d'un mois moyen
-            const extraDays = Math.round(daysLeft % 30.44);
-            
+            const extraDays = Math.floor(daysLeft - monthsLeft * 30.44);
+
             // Calculer aussi les heures, minutes et secondes
             const hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
             const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-            
+
             document.getElementById("days").textContent = daysLeft;
             document.getElementById("weeks").textContent = weeksLeft;
             document.getElementById("months").textContent = monthsLeft;
@@ -159,14 +175,20 @@
             document.getElementById("hours").textContent = hoursLeft;
             document.getElementById("minutes").textContent = minutesLeft;
             document.getElementById("seconds").textContent = secondsLeft;
-            
+
             // Calculer et mettre à jour la barre de progression
-            // Supposons une date de début (ajustez selon votre cas)
-            const startDate = new Date(2025, 1, 24); // 24 Fevrier 2025
+            // Date de début (ajustez si nécessaire) : 24 février 2025 à minuit
+            const startDate = new Date(2025, 1, 24, 0, 0, 0);
             const totalTime = targetDate - startDate;
             const elapsedTime = today - startDate;
-            const percentComplete = (elapsedTime / totalTime) * 100;
-            
+
+            let percentComplete = 0;
+            if (totalTime > 0) {
+                percentComplete = (elapsedTime / totalTime) * 100;
+                // borner entre 0 et 100
+                percentComplete = Math.max(0, Math.min(100, percentComplete));
+            }
+
             document.getElementById("progress-bar").style.width = percentComplete.toFixed(2) + "%";
             document.getElementById("progress-text").textContent = percentComplete.toFixed(2) + "% terminé";
         }
@@ -180,7 +202,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Décompte jusqu'au 22 août 2025</h1>
+        <h1>Décompte jusqu'au 21 août 2025</h1>
         
         <div class="countdown">
             <div class="time-unit">
@@ -217,4 +239,3 @@
     </div>
 </body>
 </html>
-
